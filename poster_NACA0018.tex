@@ -1,0 +1,558 @@
+% ============================================================================
+%  PÓSTER — Modelado numérico de la histéresis aerodinámica (NACA 0018)
+%  CC2104 Métodos Numéricos — UTEC — 2026-2 — Grupo 1
+%
+%  Formato: 48 × 36 pulgadas (horizontal), pensado para impresión.
+%  Compilación: pdfLaTeX, dos pasadas (Palatino + Helvetica).
+%  Comando: pdflatex poster_NACA0018.tex  (repetir para estabilizar el overlay)
+%
+%  Las figuras 2–5 todavía no están incluidas: en la columna 3 hay espacios
+%  reservados con el tamaño y la ubicación definitivos. Para reemplazarlos,
+%  sigue las instrucciones del archivo Figuras/LEEME.md.
+% ============================================================================
+
+\documentclass[final]{article}
+
+\usepackage[paperwidth=121.92cm, paperheight=91.44cm,
+            top=13.4cm, bottom=3.4cm, left=2.4cm, right=2.4cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{amsmath}
+\usepackage{mathpazo}                 % cuerpo serif (Palatino)
+\usepackage[scaled=0.92]{helvet}      % títulos sans (Helvetica)
+\usepackage{textcomp}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.24cm}
+\setlength{\abovedisplayskip}{0.34cm}
+\setlength{\belowdisplayskip}{0.34cm}
+\setlength{\abovedisplayshortskip}{0.20cm}
+\setlength{\belowdisplayshortskip}{0.20cm}
+
+% ----------------------------------------------------------------------------
+% Tipografías
+% ----------------------------------------------------------------------------
+% Cuerpo: Palatino (mathpazo). Títulos: Helvetica.
+\newcommand{\headingfont}{\sffamily}
+\newcommand{\headingfontlight}{\sffamily}
+
+% ----------------------------------------------------------------------------
+% Paleta UTEC
+% ----------------------------------------------------------------------------
+\definecolor{utecNavy}{HTML}{00274C}
+\definecolor{utecCyan}{HTML}{19B5E0}
+\definecolor{utecGray}{HTML}{3A3A3A}
+\definecolor{utecLight}{HTML}{EAF3F8}
+
+% ----------------------------------------------------------------------------
+% Escalas tipográficas
+% ----------------------------------------------------------------------------
+\newcommand{\cuerpo}{\fontsize{22.5}{28.5}\selectfont}
+\newcommand{\cuerpoSmall}{\fontsize{19}{24}\selectfont}
+\newcommand{\captionfont}{\fontsize{14.5}{18}\selectfont}
+
+% ----------------------------------------------------------------------------
+% Encabezado de bloque (título centrado + regla, como el póster de referencia)
+% ----------------------------------------------------------------------------
+\newcommand{\bloque}[1]{%
+  \par\vspace{0.10cm}%
+  \begin{center}
+    {\headingfont\bfseries\color{utecNavy}\fontsize{29}{34}\selectfont #1}
+  \end{center}%
+  \vspace{-0.44cm}%
+  {\color{utecNavy}\rule{\linewidth}{1.1pt}}\par
+  \vspace{0.34cm}%
+}
+
+\newcommand{\subbloque}[1]{%
+  \par\vspace{0.26cm}%
+  {\headingfont\bfseries\color{utecNavy}\fontsize{21.5}{25}\selectfont #1}\par
+  \vspace{0.10cm}%
+}
+
+% ----------------------------------------------------------------------------
+% Espacio reservado para una figura (mismo tamaño que tendrá la imagen final)
+% #1 = número de figura, #2 = título corto, #3 = pie de figura
+% ----------------------------------------------------------------------------
+\newcommand{\figslot}[3]{%
+  \begin{minipage}[t]{18.05cm}
+    \centering
+    \begin{tikzpicture}
+      \fill[utecLight] (0,0) rectangle (18,11.2);
+      \draw[utecNavy!45, dashed, line width=1.3pt] (0,0) rectangle (18,11.2);
+
+      % Ícono de imagen
+      \begin{scope}[shift={(7.55,8.35)}, utecNavy!35]
+        \draw[line width=1.1pt, rounded corners=1pt] (0,0) rectangle (2.9,2.0);
+        \fill (0.62,1.42) circle (0.20);
+        \draw[line width=1.1pt] (0.22,0.30) -- (1.05,1.18) -- (1.55,0.67) -- (2.65,1.66);
+      \end{scope}
+
+      \node at (9,6.05) {\headingfont\bfseries\color{utecNavy!70}\fontsize{17}{20}\selectfont FIGURA #1};
+      \node at (9,4.55) {\color{utecNavy!65}\fontsize{14}{17}\selectfont #2};
+      \node at (9,3.15) {\color{utecNavy!45}\itshape\fontsize{12}{14}\selectfont espacio para imagen};
+    \end{tikzpicture}\\[0.24cm]
+    {\captionfont\textbf{Figura #1.} #3\par}
+  \end{minipage}%
+}
+
+% ----------------------------------------------------------------------------
+% Estilos de tabla
+% ----------------------------------------------------------------------------
+\newcommand{\tabhead}[1]{\headingfont\bfseries\color{utecNavy}#1}
+\renewcommand{\arraystretch}{1.18}
+
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% BANDA SUPERIOR
+% ============================================================================
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[utecNavy] (current page.north west) rectangle
+    ([yshift=-12cm]current page.north east);
+
+  \node[anchor=north, text width=100cm, align=center,
+        text=white, font=\headingfont\bfseries, yshift=-1.85cm]
+    at (current page.north) {\fontsize{56}{64}\selectfont
+      \spaceskip=0.28em
+      Modelado numérico de la histéresis aerodinámica asociada a la pérdida};
+
+  \node[anchor=north, text width=100cm, align=center,
+        text=white, font=\headingfont\bfseries, yshift=-4.22cm]
+    at (current page.north) {\fontsize{56}{64}\selectfont
+      \spaceskip=0.28em
+      de un ala NACA 0018 mediante integración y continuación};
+
+  \node[anchor=north, text width=108cm, align=center,
+        text=white, font=\headingfont, yshift=-7.30cm]
+    at (current page.north) {\fontsize{25}{31}\selectfont
+      Jesús A. Salirrosas Vásquez \textperiodcentered\ Juan Diego Mejía Armas
+      \textperiodcentered\ Jonathan L. Reyes Torres \textperiodcentered\
+      Miguel A. Ramos Bonilla \textperiodcentered\ Moises Suni Chino};
+
+  \node[anchor=north, text width=108cm, align=center,
+        text=white, font=\headingfontlight, yshift=-9.05cm]
+    at (current page.north) {\fontsize{21}{25}\selectfont
+      Universidad de Ingeniería y Tecnología (UTEC)
+      \textperiodcentered\ CC2104 Métodos Numéricos};
+
+  % Logo UTEC (archivo extraído del informe; se puede reemplazar por el oficial)
+  \node[anchor=north east, xshift=-1.8cm, yshift=-1.55cm,
+        fill=white, rounded corners=0.18cm, inner sep=0.28cm]
+    at (current page.north east) {\includegraphics[height=7.2cm]{Figuras/logo_utec.png}};
+
+  % Línea de acento cian
+  \fill[utecCyan] ([yshift=-11.82cm]current page.north west) rectangle
+    ([yshift=-12cm]current page.north east);
+\end{tikzpicture}
+
+% ============================================================================
+% PIE DE PÁGINA
+% ============================================================================
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[utecNavy] (current page.south west) rectangle
+    ([yshift=2.2cm]current page.south east);
+
+  \node[anchor=west, text=white, font=\headingfont,
+        xshift=2.4cm, yshift=1.10cm]
+    at (current page.south west) {\fontsize{17}{17}\selectfont 2026-2};
+
+  \node[anchor=center, text=white, font=\headingfont,
+        xshift=0cm, yshift=1.10cm]
+    at (current page.south) {\fontsize{17}{17}\selectfont
+      CC2104 \textperiodcentered\ Métodos Numéricos};
+
+  \node[anchor=east, text=white, font=\headingfont,
+        xshift=-2.4cm, yshift=1.10cm]
+    at (current page.south east) {\fontsize{17}{17}\selectfont
+      ABP \textperiodcentered\ Grupo 1};
+\end{tikzpicture}
+
+% ============================================================================
+% CUERPO — TRES COLUMNAS
+% ============================================================================
+\noindent
+% ============================================================================
+% COLUMNA 1
+% ============================================================================
+\begin{minipage}[t]{37.44cm}
+\vspace{0pt}
+\cuerpo
+\raggedright
+
+\bloque{Introducción}
+
+La \textbf{pérdida aerodinámica} ocurre cuando un perfil alar supera
+determinados ángulos de ataque: el flujo se desprende y las cargas
+aerodinámicas disminuyen. La \textbf{histéresis aerodinámica} aparece cuando,
+para un mismo ángulo de ataque, la sustentación depende de si el ángulo está
+aumentando o disminuyendo. El sistema presenta entonces dos ramas estables y
+una transición entre ellas.
+
+En este trabajo se estudia numéricamente la histéresis asociada a la pérdida
+de un ala con perfil \textbf{NACA 0018}, mediante un modelo no lineal que
+representa la adherencia y el desprendimiento del flujo.
+
+\bloque{Objetivos}
+
+\textbf{Objetivo general.} Modelar numéricamente la histéresis aerodinámica
+asociada a la pérdida de un ala NACA 0018, analizando la transición entre las
+ramas estables de las cargas aerodinámicas.
+
+\vspace{0.12cm}
+\textbf{Objetivos específicos}
+\begin{itemize}[leftmargin=0.80cm, itemsep=0.16cm, topsep=0.12cm,
+                  label=\textcolor{utecCyan}{\textbullet}]
+  \item Implementar un modelo no lineal de relajación--retardo para la
+        dinámica de adherencia del flujo.
+  \item Evaluar el comportamiento del modelo mediante integración numérica.
+  \item Analizar la sensibilidad ante variaciones de frecuencia, amplitud y
+        parámetros temporales $b$ y $\tau_2$.
+  \item Estimar el coeficiente de fuerza normal $C_N$ en condiciones estáticas
+        y dinámicas, contrastándolo con datos experimentales digitalizados.
+\end{itemize}
+
+\vspace{0.30cm}
+\begin{tikzpicture}
+  \node[draw=utecCyan, fill=utecLight, line width=1.2pt,
+        rounded corners=0.20cm, text width=33.6cm, inner sep=0.42cm,
+        align=left]
+    {\headingfont\bfseries\color{utecNavy}\fontsize{18}{22}\selectfont
+       Pregunta de investigación\\[0.14cm]
+     {\rmfamily\mdseries\fontsize{19.5}{24.5}\selectfont
+       ¿Cómo se manifiesta la histéresis aerodinámica de un ala NACA 0018 y
+       cómo cambia la transición entre sus ramas estables al variar la
+       frecuencia y los parámetros temporales del modelo?}};
+\end{tikzpicture}
+
+\bloque{Metodología}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw=utecNavy, fill=utecLight, rounded corners=0.18cm,
+              line width=1pt, text width=29.5cm, align=center,
+              minimum height=2.28cm, inner sep=0.18cm,
+              font=\fontsize{16.5}{19}\selectfont},
+  small/.style={draw=utecNavy, fill=utecLight, rounded corners=0.15cm,
+                line width=1pt, text width=8.4cm, align=center,
+                minimum height=1.65cm, inner sep=0.12cm,
+                font=\fontsize{15.5}{18}\selectfont},
+  arrow/.style={-{Latex[length=3mm,width=2.6mm]}, line width=1.4pt,
+                draw=utecNavy},
+  line/.style={line width=1.4pt, draw=utecNavy},
+  node distance=0.90cm
+]
+
+\node[box] (n1) {Inicio};
+\node[box, below=of n1] (n2) {Digitalización de datos experimentales\\
+  \emph{44 puntos estáticos \textperiodcentered\ 31 puntos dinámicos}};
+\node[box, below=of n2] (n3) {Ajuste de parámetros\\
+  \emph{búsqueda global + mínimos cuadrados}};
+\node[box, below=of n3] (n4) {Formulación del modelo diferencial no lineal};
+\node[box, below=of n4] (n5) {Análisis estático\\
+  \emph{Newton--Raphson + continuación pseudo-longitud de arco}};
+\node[box, below=of n5] (n6) {Análisis dinámico: integración temporal};
+
+\node[small, below=1.35cm of n6, xshift=-9.6cm] (e) {Euler};
+\node[small, below=1.35cm of n6]               (h) {Heun};
+\node[small, below=1.35cm of n6, xshift=9.6cm]  (r) {RK4};
+
+\node[box, below=1.35cm of h] (n7) {Análisis de sensibilidad\\
+  \emph{frecuencia, amplitud, $b$ y $\tau_2$}};
+\node[box, below=of n7] (n8) {Contraste con datos digitalizados y cálculo del RMSE};
+\node[box, below=of n8] (n9) {Conclusiones};
+
+\draw[arrow] (n1) -- (n2);
+\draw[arrow] (n2) -- (n3);
+\draw[arrow] (n3) -- (n4);
+\draw[arrow] (n4) -- (n5);
+\draw[arrow] (n5) -- (n6);
+
+\coordinate (split) at ($(n6.south)+(0,-0.90)$);
+\draw[line] (n6.south) -- (split);
+\draw[line] (split -| e.north) -- (split -| r.north);
+\draw[arrow] (split -| e.north) -- (e.north);
+\draw[arrow] (split -| h.north) -- (h.north);
+\draw[arrow] (split -| r.north) -- (r.north);
+
+\coordinate (merge) at ($(n7.north)+(0,0.90)$);
+\draw[line] (e.south) -- (e.south |- merge);
+\draw[line] (h.south) -- (h.south |- merge);
+\draw[line] (r.south) -- (r.south |- merge);
+\draw[line] (e.south |- merge) -- (r.south |- merge);
+\draw[arrow] (merge) -- (n7.north);
+
+\draw[arrow] (n7) -- (n8);
+\draw[arrow] (n8) -- (n9);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.05cm}
+{\cuerpoSmall
+Se compararon los métodos de \textbf{Euler}, \textbf{Heun} y
+\textbf{Runge--Kutta de cuarto orden (RK4)}. La precisión se evaluó mediante
+el error cuadrático medio (RMSE) frente a los datos digitalizados.}
+
+\end{minipage}%
+\hfill
+% ============================================================================
+% COLUMNA 2
+% ============================================================================
+\begin{minipage}[t]{37.44cm}
+\vspace{0pt}
+\cuerpo
+\raggedright
+
+\bloque{Sistema de ecuaciones diferenciales}
+
+El estado $x(t)\in[0,1]$ cuantifica la adherencia del flujo:
+$x=1$ corresponde al extremo adherido y $x=0$ al desprendido.
+\begin{align*}
+  b\dot{x} &= F(x,\alpha^*), &
+  \alpha^* &= \alpha-\tau_2\dot{\alpha},\\[0.18cm]
+  F(x,a) &= [x_0(a)-x]\,F_{hm}(x,a)+F_{sd}(x,a), &
+  x_0(a) &= \frac{1}{1+(a/\alpha_c)^8}.
+\end{align*}
+
+$\alpha^*$ es el ángulo de ataque efectivo, $\tau_2$ el retardo cinemático y
+$b>0$ controla la velocidad de evolución del estado. $F_{hm}$ describe la
+relajación y $F_{sd}$ una perturbación suave.
+
+\vspace{0.12cm}
+El coeficiente de fuerza normal se calcula como
+\begin{equation*}
+  C_N=C_{N,\mathrm{att}}(\alpha)\,g(x)
+     +C_{N,\mathrm{det}}(\alpha)\,[1-g(x)],
+  \qquad
+  g(x)=\frac{2\sqrt{x}+x}{3},
+\end{equation*}
+y el movimiento oscilatorio del ala se prescribe mediante
+\begin{equation*}
+  \alpha(t)=\alpha_m+A\sin(\omega t).
+\end{equation*}
+
+{\cuerpoSmall\color{utecGray}
+\textbf{Nota:} la formulación integrada en los resultados es la no lineal; la
+ecuación lineal del informe se incluye solo como referencia.}
+
+\bloque{Parámetros del modelo}
+
+\begin{center}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}} l r @{}}
+  \toprule
+  \tabhead{Parámetro} & \tabhead{Valor} \\
+  \midrule
+  Cuerda, $c$                 & $0.242$ m \\
+  Velocidad, $U_\infty$       & $40$ m/s \\
+  Frecuencia, $\omega$        & $1.2566$ rad/s \\
+  Ángulo medio, $\alpha_m$    & $25^\circ$ \\
+  Amplitud, $A$               & $24^\circ$ \\
+  Ángulo crítico, $\alpha_c$  & $18.657^\circ$ \\
+  Constante de relajación, $b$& $0.0422$ s \\
+  Retardo cinemático, $\tau_2$& $0.0424$ s \\
+  Centro elipse, $x_c$        & $0.3527$ \\
+  Semialtura, $x_h$           & $0.3436$ \\
+  Inclinación, $\gamma$       & $0.6042$ \\
+  Perturbación, $m_x$         & $0.0010$ \\
+  \bottomrule
+\end{tabular*}
+\end{center}
+
+\vspace{0.05cm}
+{\cuerpoSmall
+$\alpha_w=6.382^\circ$ \textperiodcentered\ $\alpha_{off}=4.378^\circ$
+\textperiodcentered\ anchos de $F_{sd}$: $8^\circ$ y $0.5$.
+Los valores se obtuvieron por ajuste a los datos digitalizados, valores del
+artículo de referencia y supuestos de la implementación.}
+
+\bloque{Resultados principales}
+
+\subbloque{A. Equilibrios estáticos e histéresis}
+La continuación numérica identificó \textbf{774 puntos}: 573 estables y 201
+inestables. Los pliegues delimitan la zona de histéresis y, para un mismo
+$\alpha$, coexisten dos equilibrios estables y uno inestable.
+
+\vspace{0.25cm}
+\begin{tikzpicture}
+  \fill[utecNavy] (0,0) rectangle (37.44,4.9);
+  \foreach \x/\val/\lab in {
+    4.68/12.529\textdegree/Reenganche,
+    14.04/24.819\textdegree/Pérdida,
+    23.40/12.289\textdegree/Ancho de histéresis,
+    32.76/0.0358/RMSE estático}
+  {
+    \node at (\x,3.22) {\headingfont\bfseries\color{white}
+      \fontsize{27}{30}\selectfont \val};
+    \node at (\x,1.35) {\color{white!82}\fontsize{13.5}{15}\selectfont \lab};
+  }
+  \foreach \x in {9.36,18.72,28.08}
+    \draw[white!30, line width=0.8pt] (\x,0.55) -- (\x,4.35);
+\end{tikzpicture}
+
+\subbloque{B. Respuesta dinámica}
+Caso base: $\alpha(t)=25^\circ+24^\circ\sin(2\pi\cdot 0.2\,t)$.
+
+\vspace{0.05cm}
+\begin{center}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}} l r @{}}
+  \toprule
+  \tabhead{Métrica} & \tabhead{Resultado} \\
+  \midrule
+  Ángulo de pérdida            & $27.35^\circ$ \\
+  Ángulo de reenganche         & $8.78^\circ$ \\
+  Separación angular           & $18.57^\circ$ \\
+  Área del lazo, $A_L$         & $8.285$ \\
+  Máximo de $C_N$              & $1.116$ \\
+  \bottomrule
+\end{tabular*}
+\end{center}
+
+{\cuerpoSmall
+El régimen periódico se alcanzó después de tres ciclos de oscilación.}
+
+\subbloque{C. Comparación de métodos numéricos}
+\begin{center}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}} l r r @{}}
+  \toprule
+  \tabhead{Método} & \tabhead{Error máximo} & \tabhead{Orden} \\
+  \midrule
+  Euler & $3.1\times10^{-3}$ & $1$ \\
+  Heun  & $8.5\times10^{-6}$ & $2$ \\
+  \rowcolor{utecLight}
+  \textbf{RK4} & $\mathbf{1.7\times10^{-10}}$ & $\mathbf{4}$ \\
+  \bottomrule
+\end{tabular*}
+\end{center}
+
+{\cuerpoSmall
+RK4 presentó el menor error numérico en la comparación realizada.}
+
+\end{minipage}%
+\hfill
+% ============================================================================
+% COLUMNA 3
+% ============================================================================
+\begin{minipage}[t]{37.44cm}
+\vspace{0pt}
+\cuerpo
+\raggedright
+
+\bloque{Resultados gráficos}
+
+\begin{center}
+\figslot{2}{Equilibrios estáticos}%
+  {Variable de separación $x$ y coeficiente $C_N$: ramas estables, rama
+   inestable y puntos de pliegue.}
+\hfill
+\figslot{3}{Respuesta dinámica}%
+  {Evolución temporal del estado y trayectorias del ciclo base en función
+   del ángulo de ataque.}
+
+\vspace{0.55cm}
+
+\figslot{4}{Efecto de la frecuencia}%
+  {Lazos de fuerza normal para tres frecuencias de cabeceo, con amplitud de
+   $24^\circ$ y ángulo medio de $25^\circ$.}
+\hfill
+\figslot{5}{Contraste con datos}%
+  {Comparación de $C_N$ del modelo con los puntos digitalizados del estudio
+   de referencia.}
+\end{center}
+
+\bloque{Sensibilidad y contraste}
+
+\subbloque{Sensibilidad de los parámetros}
+\begin{itemize}[leftmargin=0.78cm, itemsep=0.10cm, topsep=0.05cm,
+                  label=\textcolor{utecCyan}{\textbullet}]
+  \item Frecuencia de $0.1$ a $0.3$ Hz: el área del lazo aumentó
+        aproximadamente un \textbf{53\,\%}.
+  \item Duplicar $b$: el área aumentó un \textbf{15.6\,\%}.
+  \item Duplicar $\tau_2$: el área aumentó un \textbf{22.6\,\%}.
+  \item Semieje de $5.7^\circ$ a $6.7^\circ$: el ancho de histéresis pasó de
+        $11.31^\circ$ a $13.27^\circ$.
+\end{itemize}
+
+\subbloque{Contraste con datos digitalizados}
+\begin{itemize}[leftmargin=0.78cm, itemsep=0.10cm, topsep=0.05cm,
+                  label=\textcolor{utecCyan}{\textbullet}]
+  \item \textbf{RMSE estático: $0.0358$} (44 puntos).
+  \item \textbf{RMSE dinámico: $0.0500$} (31 puntos); $0.0465$ en los
+        23 puntos de ajuste y $0.0589$ en los 8 reservados.
+\end{itemize}
+
+{\cuerpoSmall\color{utecGray}
+Los puntos reservados pertenecen a la misma curva de ajuste: no constituyen
+una validación experimental independiente.}
+
+\bloque{Alcance y limitaciones}
+{\cuerpoSmall
+\begin{itemize}[leftmargin=0.80cm, itemsep=0.12cm, topsep=0.05cm,
+                  label=\textcolor{utecCyan}{\textbullet}]
+  \item El modelo reduce el campo de flujo a una variable escalar de
+        adherencia; no resuelve la estructura espacial del flujo.
+  \item Los coeficientes de la función elíptica son fenomenológicos: no
+        representan dimensiones físicas del ala.
+  \item El RMSE cuantifica el ajuste a datos digitalizados; los puntos
+        reservados no constituyen una validación experimental independiente.
+\end{itemize}
+}
+
+\bloque{Conclusiones}
+\begin{itemize}[leftmargin=0.78cm, itemsep=0.10cm, topsep=0.05cm,
+                  label=\textcolor{utecCyan}{\textbullet}]
+  \item El modelo no lineal representó la histéresis mediante dos ramas
+        estables y una inestable; la continuación numérica ubicó los pliegues.
+  \item RK4 fue más preciso que Euler y Heun en las pruebas realizadas.
+  \item La frecuencia y los parámetros temporales modificaron el área del
+        lazo y la respuesta dinámica.
+  \item El semieje horizontal de la función elíptica controló principalmente
+        el ancho de la histéresis estática.
+  \item El modelo reprodujo las tendencias generales; se requieren datos
+        adicionales para validar su capacidad predictiva.
+\end{itemize}
+
+\bloque{Referencias}
+{\fontsize{13.5}{17}\selectfont
+\begin{enumerate}[leftmargin=0.62cm, itemsep=0.08cm, topsep=0.02cm]
+  \item Goman, M. G., \& Khrabrov, A. N. (1994). State-space representation
+        of aerodynamic characteristics of an aircraft at high angles of
+        attack. \emph{Journal of Aircraft, 31}(5), 1109--1115.
+        \textcolor{utecNavy}{doi:10.2514/3.46618}
+  \item Sereez, M., Abramov, N., \& Goman, M. (2024). CFD simulations and
+        phenomenological modelling of aerodynamic stall hysteresis of NACA
+        0018 wing. \emph{Aerospace, 11}(5), 354.
+        \textcolor{utecNavy}{doi:10.3390/aerospace11050354}
+  \item Dahlke, J. A., \& Bettinger, R. A. (2024). Practical implementation
+        of pseudo-arclength continuation to ensure consistent path direction.
+        \emph{Acta Astronautica, 215}, 205--216.
+        \textcolor{utecNavy}{doi:10.1016/j.actaastro.2023.12.007}
+  \item Ekaterinaris, J. A., \& Platzer, M. F. (1998). Computational
+        prediction of airfoil dynamic stall. \emph{Progress in Aerospace
+        Sciences, 33}(11--12), 759--846.
+        \textcolor{utecNavy}{doi:10.1016/S0376-0421(97)00012-2}
+  \item Chen, M., Li, Z., Gao, Z., \& Wang, J. (2024). Influence of boundary
+        layer and pressure lag on unsteady aerodynamics of airfoil based on a
+        simple semi-empirical dynamic stall engineering model.
+        \emph{Wind Energy, 27}(9), 922--935.
+        \textcolor{utecNavy}{doi:10.1002/we.2931}
+\end{enumerate}
+}
+
+\end{minipage}
+
+\end{document}

@@ -1,0 +1,235 @@
+% ============================================================================
+%  TEMPLATE D'AFFICHE SCIENTIFIQUE DATAIA (FORMAT VERTICAL / PORTRAIT — A0)
+%  Institut DataIA, Université Paris-Saclay
+%  Compilation : XeLaTeX (obligatoire, pour la police Raleway)
+% ============================================================================
+%
+%  COMMENT PERSONNALISER CE TEMPLATE ?
+%  Tout ce dont vous avez besoin se trouve dans le bloc
+%  "PARAMÈTRES À PERSONNALISER" juste en dessous : logo, couleurs,
+%  informations de l'auteur, contact. Le reste du fichier n'a normalement
+%  pas besoin d'être modifié.
+%
+%  Le centre de l'affiche contient 3 blocs de contenu prêts à l'emploi
+%  (voir section "CONTENU DE L'AFFICHE" tout en bas) : à vous de les
+%  déplacer, redimensionner ou dupliquer selon votre contenu scientifique.
+% ============================================================================
+
+\documentclass[a0paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{french}
+\usepackage[paperwidth=84.1cm, paperheight=118.9cm, margin=0cm]{geometry}
+\usepackage{graphicx}
+\usepackage{grffile} % permet les noms de fichiers avec espaces/parenthèses (ex. "Image_défault (1).jpg")
+\usepackage{tikz}
+\usepackage{enumitem} % pour personnaliser l'espacement des listes à puces
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% ----------------------------------------------------------------------------
+% PARAMÈTRES À PERSONNALISER
+% ----------------------------------------------------------------------------
+
+% --- Polices --------------------------------------------------------------
+% Les fichiers .ttf de Raleway doivent se trouver dans le dossier Fonts/
+% (déjà inclus dans le projet Overleaf, réutilisé depuis le template de
+% slides). Si Raleway n'est pas disponible, remplacez "Raleway" par le
+% nom d'une police installée sur Overleaf.
+\setmainfont{Raleway}[
+    Path = Fonts/,
+    Extension = .ttf,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Regular,
+]
+\newfontfamily\ralewaylight{Raleway}[Path = Fonts/, Extension = .ttf, UprightFont = *-Light]
+\newfontfamily\ralewaymedium{Raleway}[Path = Fonts/, Extension = .ttf, UprightFont = *-Medium]
+\newfontfamily\ralewaysemibold{Raleway}[Path = Fonts/, Extension = .ttf, UprightFont = *-SemiBold]
+
+% --- Couleurs officielles DataIA -------------------------------------------
+\definecolor{dataiaBleuFonce}{HTML}{253573}   % couleur principale (bandeaux)
+\definecolor{dataiaBleuMarine}{HTML}{3997D2}  % accent
+\definecolor{dataiaGris}{HTML}{4A4949}        % texte secondaire
+\definecolor{dataiaVert}{HTML}{B4CC0D}
+\definecolor{dataiaRose}{HTML}{DA398D}
+\definecolor{dataiaOrange}{HTML}{ED700E}
+\definecolor{dataiaBlanc}{HTML}{FFFFFF}
+
+% --- Logo et badge -----------------------------------------------------
+% Chemins vers vos visuels, dans le dossier Image/ (les mêmes fichiers
+% que ceux utilisés pour le template de slides).
+\newcommand{\logoDataIA}{Image/logo-dataia-couleur.png}
+\newcommand{\badgeSupportedBy}{Image/badge-supported-by.png}
+
+% --- Informations de l'auteur (bandeau du haut) ------------------------
+\newcommand{\posterNom}{[Prénom] [Nom]}
+\newcommand{\posterRole}{[Rôle] -- [Affiliation]}
+\newcommand{\posterEcole}{[Faculté / École]}
+
+% --- Contact (bandeau du bas) ------------------------------------------
+\newcommand{\posterEmail}{prenom.nom@universite-paris-saclay.fr}
+
+% --- Dimensions des bandeaux ---------------------------------------------
+% Ajustez ces deux valeurs si vous voulez un bandeau du haut plus haut/bas,
+% ou un bandeau du bas plus ou moins fin.
+\newlength{\hauteurBandeauHaut}
+\setlength{\hauteurBandeauHaut}{12cm}
+\newlength{\hauteurBandeauBas}
+\setlength{\hauteurBandeauBas}{4cm}
+
+% ----------------------------------------------------------------------------
+% CONFIGURATION (ne pas modifier sauf besoin avancé)
+% ----------------------------------------------------------------------------
+
+% Largeur/hauteur de la page, pratiques pour les tikzpicture en overlay
+\newlength{\posterlargeur}
+\newlength{\posterhauteur}
+\setlength{\posterlargeur}{\the\paperwidth}
+\setlength{\posterhauteur}{\the\paperheight}
+
+\begin{document}
+
+% ============================================================================
+% BANDEAU DU HAUT — fond bleu DataIA, infos auteur à gauche, logo à droite
+% ============================================================================
+\begin{tikzpicture}[remember picture, overlay]
+    % Fond bleu plein du bandeau du haut
+    \fill[dataiaBleuFonce] (current page.north west) rectangle
+        ([yshift=-\hauteurBandeauHaut]current page.north east);
+
+    % Nom / Prénom
+    \node[anchor=north west, text=white, font=\ralewaysemibold, xshift=2.5cm, yshift=-3cm]
+        at (current page.north west) {\fontsize{48}{58}\selectfont \posterNom};
+
+    % Rôle -- Affiliation
+    \node[anchor=north west, text=white, font=\ralewaymedium, xshift=2.5cm, yshift=-6cm]
+        at (current page.north west) {\fontsize{34}{34}\selectfont \posterRole};
+
+    % Faculté / École
+    \node[anchor=north west, text=white, font=\ralewaylight, xshift=2.5cm, yshift=-7.8cm]
+        at (current page.north west) {\fontsize{34}{34}\selectfont \posterEcole};
+
+    % Logo DataIA, à droite du bandeau
+    \node[anchor=north east, xshift=-2.5cm, yshift=-2.6cm]
+        at (current page.north east) {\includegraphics[height=6cm]{\logoDataIA}};
+\end{tikzpicture}
+
+% ============================================================================
+% BANDEAU DU BAS — fond bleu DataIA (fin), email à gauche, badge à droite
+% ============================================================================
+\begin{tikzpicture}[remember picture, overlay]
+    % Fond bleu plein du bandeau du bas
+    \fill[dataiaBleuFonce] (current page.south west) rectangle
+        ([yshift=\hauteurBandeauBas]current page.south east);
+
+    % Email de contact, à gauche
+    \node[anchor=west, text=white, font=\ralewaymedium, xshift=2.5cm]
+        at ([yshift=\hauteurBandeauBas/2]current page.south west) {\fontsize{30}{24}\selectfont \posterEmail};
+
+    % Badge "Supported by the DataIA Institute", à droite
+    \node[anchor=east, xshift=-2.5cm]
+        at ([yshift=\hauteurBandeauBas/2]current page.south east) {\includegraphics[height=14cm]{\badgeSupportedBy}};
+\end{tikzpicture}
+
+% ============================================================================
+% CONTENU DE L'AFFICHE
+% ============================================================================
+% L'espace entre les deux bandeaux est votre zone de contenu scientifique.
+% 3 blocs prêts à l'emploi sont fournis ci-dessous, chacun dans son propre
+% tikzpicture (ne jamais imbriquer deux tikzpicture l'un dans l'autre).
+% Déplacez-les en changeant simplement les valeurs de xshift/yshift, ou
+% dupliquez un bloc pour en ajouter un nouveau.
+
+% --- Bloc 1 : titre + paragraphe — en haut à gauche -------------------------
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north west, xshift=2.5cm, yshift=-\hauteurBandeauHaut-7cm,
+          text width=0.42\posterlargeur, align=left]
+        at (current page.north west) {%
+            {\ralewaysemibold\fontsize{38}{44}\selectfont [Titre]}\\[0.8cm]
+            {\ralewaylight\fontsize{26}{34}\selectfont
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+            sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Curabitur pretium tincidunt lacus, sed rhoncus nisl porta a. Sed
+            ac lacus at libero pretium fermentum. Aenean euismod, nunc eu
+            fermentum tincidunt, nunc lacus vehicula lacus, eget aliquet
+            lacus lacus eget lacus. Nulla facilisi. Vestibulum ante ipsum
+            primis in faucibus orci luctus et ultrices posuere cubilia
+            curae; Donec sit amet nisl at leo tincidunt tincidunt.}
+        };
+\end{tikzpicture}
+
+% --- Bloc 2 : image + légende — en haut à droite -----------------------------
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north east, xshift=-2.5cm, yshift=-\hauteurBandeauHaut-7cm]
+        (imageBlocUn) at (current page.north east)
+        {\includegraphics[width=0.42\posterlargeur]{Image/Image_défault (1).jpg}};
+    \node[anchor=north east, xshift=0cm, yshift=-0.8cm,
+          text width=0.42\posterlargeur, align=left]
+        at (imageBlocUn.south east) {%
+            {\ralewaylight\fontsize{24}{30}\selectfont
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna.}
+        };
+\end{tikzpicture}
+
+% --- Bloc 3 : titre + liste à puces — au centre à gauche ---------------------
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north west, xshift=2.5cm, yshift=-\hauteurBandeauHaut-25cm,
+          text width=0.42\posterlargeur, align=left]
+        at (current page.north west) {%
+            {\ralewaysemibold\fontsize{38}{44}\selectfont [Titre]}\\[0.8cm]
+            \begin{itemize}[leftmargin=1.2cm, itemsep=0.5cm, label=\textbullet]
+                \item {\ralewaylight\fontsize{26}{32}\selectfont ...}
+                \item {\ralewaylight\fontsize{26}{32}\selectfont ...}
+                \item {\ralewaylight\fontsize{26}{32}\selectfont ...}
+            \end{itemize}
+        };
+\end{tikzpicture}
+
+% --- Bloc 4 : titre + paragraphe (2e bloc texte) — au centre à droite -------
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north east, xshift=-2.5cm, yshift=-\hauteurBandeauHaut-37cm,
+          text width=0.42\posterlargeur, align=left]
+        at (current page.north east) {%
+            {\ralewaysemibold\fontsize{38}{44}\selectfont [Titre]}\\[0.8cm]
+            {\ralewaylight\fontsize{26}{34}\selectfont
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+            sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Curabitur pretium tincidunt lacus, sed rhoncus nisl porta a. Sed
+            ac lacus at libero pretium fermentum. Aenean euismod, nunc eu
+            fermentum tincidunt, nunc lacus vehicula lacus, eget aliquet
+            lacus lacus eget lacus. Nulla facilisi. Vestibulum ante ipsum
+            primis in faucibus orci luctus et ultrices posuere cubilia
+            curae; Donec sit amet nisl at leo tincidunt tincidunt.}
+        };
+\end{tikzpicture}
+
+% --- Bloc 5 : image + légende (2e bloc image) — en bas à gauche ------------
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north west, xshift=2.5cm, yshift=-\hauteurBandeauHaut-39cm]
+        (imageBlocDeux) at (current page.north west)
+        {\includegraphics[width=0.42\posterlargeur]{Image/Image_défault (1).jpg}};
+    \node[anchor=north west, xshift=0cm, yshift=-0.8cm,
+          text width=0.42\posterlargeur, align=left]
+        at (imageBlocDeux.south west) {%
+            {\ralewaylight\fontsize{24}{30}\selectfont
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna.}
+        };
+\end{tikzpicture}
+
+\end{document}
+```
