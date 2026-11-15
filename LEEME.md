@@ -8,7 +8,8 @@ Archivos principales:
 | `poster_NACA0018.pdf` | Póster compilado, listo para revisar o imprimir. |
 | `poster_NACA0018_preview.png` | Vista previa rápida en imagen. |
 | `Figuras/logo_utec.png` | Logo UTEC extraído de la portada del informe. |
-| `Figuras/LEEME.md` | Instrucciones para insertar las figuras 2–5. |
+| `Figuras/figura2.png` … `figura5.png` | Figuras 2–5 del informe, extraídas del PDF. |
+| `Figuras/LEEME.md` | Detalle de las figuras, respaldos y resolución. |
 
 ## Compilación
 
@@ -28,11 +29,12 @@ La segunda pasada es necesaria para estabilizar los elementos `overlay` de TikZ
   metodología (diagrama de flujo).
 - **Columna 2:** sistema de ecuaciones, parámetros del modelo y resultados
   principales (equilibrios, respuesta dinámica y comparación de métodos).
-- **Columna 3:** espacios para las figuras 2–5, sensibilidad, contraste con
-  datos, alcance, conclusiones y referencias.
+- **Columna 3:** figuras 2–5, sensibilidad, contraste con datos, alcance,
+  conclusiones y referencias.
 
-## Figuras pendientes
+## Figuras
 
-Los cuatro espacios de la columna 3 ya tienen el tamaño definitivo. Sigue
-`Figuras/LEEME.md` para reemplazarlos por las imágenes del informe sin alterar
-la maquetación.
+Las figuras 2–5 ya están insertadas y provienen del PDF del informe
+(`referencia/MN_P2_Grupo_1.pdf`), no de las fotos de WhatsApp, para garantizar
+la mejor calidad de impresión. Revisa `Figuras/LEEME.md` para ver los nombres,
+tamaños y respaldos.
